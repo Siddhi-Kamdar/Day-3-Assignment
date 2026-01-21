@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 
 interface Product {
@@ -7,18 +8,30 @@ interface Product {
   price: number;
 }
 
-const ProductList: React.FC = () => {
+interface ProductListProps {
+  search: string;
+}
+
+const ProductList: React.FC<ProductListProps> = ({ search }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProducts = async () => {
+      setLoading(true);
+      setError(null);
+
       try {
-        const response = await fetch("https://dummyjson.com/products");
+        const url = search
+          ? `https://dummyjson.com/products/search?q=${search}`
+          : "https://dummyjson.com/products";
+
+        const response = await fetch(url);
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
+
         const data = await response.json();
 
         if (Array.isArray(data.products)) {
@@ -34,30 +47,30 @@ const ProductList: React.FC = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [search]);
 
   if (loading) return <p>Loading products...</p>;
   if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
+  if (products.length === 0) return <p>No products found.</p>;
 
   return (
-    <div className="grid grid-cols-3 ">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
       {products.map((product) => (
-        <div className="m-4 border rounded-xl p-4 shadow-sm flex flex-col gap-2">
-          <div className="flex justify-between items-center"></div>
-          <div key={product.id} style={{ marginBottom: "10px" }}>
-            <h2 className="font-bold">{product.title}</h2>
-            <p>Category: {product.category}</p>
-            <p>Price: ${product.price}</p>
-          </div>
-          <button
-            className="flex-1 bg-blue-500 text-black py-1 rounded text-sm"
-          >
+        <div
+          key={product.id}
+          className="m-4 border rounded-xl p-4 shadow-sm flex flex-col gap-2"
+        >
+          <h2 className="font-bold">{product.title}</h2>
+          <p>Category: {product.category}</p>
+          <p>Price: ${product.price}</p>
+
+          <button className="mt-auto bg-blue-500 text-black py-1 rounded text-sm">
             Add to Cart
           </button>
         </div>
       ))}
     </div>
   );
-}
+};
 
 export default ProductList;

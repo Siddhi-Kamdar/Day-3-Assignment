@@ -1,25 +1,31 @@
 import CategoryDropdown from "./CategoryDropdown";
-import React from "react";
-
-interface SearchProps {
-  search: string;
-  onSearchChange: (value: string) => void;
-}
+import React, { useState } from "react";
 
 interface ThemeProps {
   theme: "light" | "dark";
   toggleTheme: () => void;
 }
 
-type NavbarProps =  ThemeProps;
+interface SearchProps {
+  onSearch: (query: string) => void;
+}
+
+type NavbarProps = ThemeProps & SearchProps;
 
 const Navbar: React.FC<NavbarProps> = ({
   theme,
-  toggleTheme
+  toggleTheme,
+  onSearch
 }) => {
+
+  const [input, setInput] = useState(""); 
+  const handleSearch = () => {
+    onSearch(input.trim());
+  };
+
   return (
     <nav
-      className="flex items-center justify-between p-4"
+      className="flex items-center justify-between p-4 gap-4"
       style={{
         backgroundColor: "var(--bg-color)",
         color: "var(--text-color)"
@@ -27,23 +33,33 @@ const Navbar: React.FC<NavbarProps> = ({
     >
       <h2 className="text-xl font-bold">E-Com</h2>
 
-      <input
-        type="text"
-        // value={search}
-        // onChange={(e) => onSearchChange(e.target.value)}
-        placeholder="Search..."
-        className="w-full sm:w-72 px-3 py-2 rounded bg-white text-black outline-none"
-      />
+      <div className="flex w-full sm:w-auto gap-2">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="Search products..."
+          className="w-full sm:w-64 px-3 py-2 rounded bg-white text-black outline-none"
+        />
 
-      <CategoryDropdown/>
+        <button
+          onClick={handleSearch}
+          className="px-4 py-2 rounded bg-blue-500 text-black font-medium"
+        >
+          Search
+        </button>
+      </div>
+
+      <CategoryDropdown />
+
       <button
         onClick={toggleTheme}
-        className="ml-4  rounded border"
+        className="ml-4 rounded border"
       >
         {theme === "light" ? "🌙" : "☀️"}
       </button>
+
       <button> 🛒 </button>
-      
     </nav>
   );
 };
