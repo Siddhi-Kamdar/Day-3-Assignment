@@ -1,4 +1,5 @@
 import { useCart } from "./CartContext";
+import { useState } from "react";
 
 interface Props {
   onClose: () => void;
@@ -15,62 +16,97 @@ const CartPopup: React.FC<Props> = ({ onClose }) => {
     totalPrice
   } = useCart();
 
+  const [checkoutDone, setCheckoutDone] = useState(false);
+  const[paidItems, setPaidItems] = useState(0);
+    const[paidAmount, setPaidAmount] = useState(0);
+
+  const handleCheckout = () => {
+    setPaidItems(totalItems);
+    setPaidAmount(totalPrice);
+    setCheckoutDone(true);
+    clearCart();
+  };
+
   return (
     <div className="fixed inset-0 bg-black/40 flex justify-end z-50">
       <div className="w-80 bg-white h-full p-4 flex flex-col">
-        <h2 className="text-xl font-bold mb-4">Your Cart</h2>
 
-        {cart.length === 0 && <p>Cart is empty</p>}
+        {checkoutDone ? (
+          <>
+            <h2 className="text-xl font-bold mb-4">Thank you for your purchase! 🎉</h2>
 
-        <div className="flex-1 overflow-auto">
-          {cart.map((item) => (
-            <div key={item.id} className="border-b py-3">
-              <p className="font-semibold">{item.title}</p>
-              <p>${item.price}</p>
+            <p className="mb-2">
+              Total Items: <b>{paidItems}</b>
+            </p>
+            <p className="mb-4">
+              Total Amount Paid: <b>${paidAmount.toFixed(2)}</b>
+            </p>
 
-              <div className="flex items-center gap-2 mt-2">
-                <button onClick={() => decrease(item.id)}>-</button>
-                <span>{item.quantity}</span>
-                <button onClick={() => increase(item.id)}>+</button>
-                <button onClick={() => remove(item.id)}>remove</button>
-              </div>
+            <button
+              onClick={onClose}
+              className="mt-auto bg-blue-500 py-2 rounded text-black font-semibold"
+            >
+              Continue Shopping
+            </button>
+          </>
+        ) : (
+          <>
+            <h2 className="text-xl font-bold mb-4">Your Cart</h2>
+
+            {cart.length === 0 && <p>Cart is empty</p>}
+
+            <div className="flex-1 overflow-auto">
+              {cart.map((item) => (
+                <div key={item.id} className="border-b py-3">
+                  <p className="font-semibold">{item.title}</p>
+                  <p>${item.price}</p>
+
+                  <div className="flex items-center gap-2 mt-2">
+                    <button onClick={() => decrease(item.id)}>-</button>
+                    <span>{item.quantity}</span>
+                    <button onClick={() => increase(item.id)}>+</button>
+                    <button onClick={() => remove(item.id)}>❌</button>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        {/* total baki che */}
-        {cart.length > 0 && (
-          <div className="mt-4 border-t pt-4">
-            <p>Total Items: <b>{totalItems}</b></p>
-            <p>Total Price: <b>${totalPrice.toFixed(2)}</b></p>
-          </div>
-        )}
+            {cart.length > 0 && (
+              <div className="border-t pt-4">
+                <p>Total Items: <b>{totalItems}</b></p>
+                <p>Total Price: <b>${totalPrice.toFixed(2)}</b></p>
+              </div>
+            )}
 
-        <div className="mt-4 flex flex-col gap-2">
-          {cart.length > 0 && (
-            <>
+            <div className="mt-4 flex flex-col gap-2">
+              {cart.length > 0 && (
+                <>
+                  <button
+                    onClick={clearCart}
+                    className="border py-2 rounded"
+                  >
+                    Clear Cart
+                  </button>
+
+                  <button
+                    onClick={handleCheckout}
+                    className="bg-green-500 py-2 rounded text-black font-semibold"
+                  >
+                    Checkout
+                  </button>
+                </>
+              )}
+
               <button
-                onClick={clearCart}
+                onClick={onClose}
                 className="border py-2 rounded"
               >
-                Clear Cart
+                Close
               </button>
+            </div>
+          </>
+        )}
 
-              <button
-                className="bg-green-500 py-2 rounded text-black font-semibold"
-              >
-                Checkout
-              </button>
-            </>
-          )}
-
-          <button
-            onClick={onClose}
-            className="border py-2 rounded"
-          >
-            Close
-          </button>
-        </div>
       </div>
     </div>
   );
