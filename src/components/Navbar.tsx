@@ -6,19 +6,21 @@ interface ThemeProps {
   toggleTheme: () => void;
 }
 
-interface SearchProps {
+interface NavbarProps extends ThemeProps {
   onSearch: (query: string) => void;
+  category: string;
+  onCategoryChange: (value: string) => void;
 }
-
-type NavbarProps = ThemeProps & SearchProps;
 
 const Navbar: React.FC<NavbarProps> = ({
   theme,
   toggleTheme,
-  onSearch
+  onSearch,
+  category,
+  onCategoryChange
 }) => {
+  const [input, setInput] = useState("");
 
-  const [input, setInput] = useState(""); 
   const handleSearch = () => {
     onSearch(input.trim());
   };
@@ -33,29 +35,29 @@ const Navbar: React.FC<NavbarProps> = ({
     >
       <h2 className="text-xl font-bold">E-Com</h2>
 
-      <div className="flex w-full sm:w-auto gap-2">
+      {/* Search */}
+      <div className="flex gap-2">
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Search products..."
-          className="w-full sm:w-64 px-3 py-2 rounded bg-white text-black outline-none"
+          className="w-64 px-3 py-2 rounded bg-white text-black outline-none"
         />
-
         <button
           onClick={handleSearch}
-          className="px-4 py-2 rounded bg-blue-500 text-black font-medium"
+          className="px-4 py-2 rounded bg-blue-500 text-black"
         >
           Search
         </button>
       </div>
 
-      <CategoryDropdown />
+      <CategoryDropdown
+        category={category}
+        onCategoryChange={onCategoryChange}
+      />
 
-      <button
-        onClick={toggleTheme}
-        className="ml-4 rounded border"
-      >
+      <button onClick={toggleTheme} className="rounded border px-2">
         {theme === "light" ? "🌙" : "☀️"}
       </button>
 

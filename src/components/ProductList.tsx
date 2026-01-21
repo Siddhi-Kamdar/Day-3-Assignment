@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 
 interface Product {
@@ -10,11 +9,12 @@ interface Product {
 
 interface ProductListProps {
   search: string;
+  category: string;
 }
 
-const ProductList: React.FC<ProductListProps> = ({ search }) => {
+const ProductList: React.FC<ProductListProps> = ({ search, category }) => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -23,13 +23,17 @@ const ProductList: React.FC<ProductListProps> = ({ search }) => {
       setError(null);
 
       try {
-        const url = search
-          ? `https://dummyjson.com/products/search?q=${search}`
-          : "https://dummyjson.com/products";
+        let url = "https://dummyjson.com/products";
+
+        if (search) {
+          url = `https://dummyjson.com/products/search?q=${search}`;
+        } else if (category !== "All") {
+          url = `https://dummyjson.com/products/category/${category}`;
+        }
 
         const response = await fetch(url);
         if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+          throw new Error("Failed to fetch products");
         }
 
         const data = await response.json();
@@ -37,20 +41,20 @@ const ProductList: React.FC<ProductListProps> = ({ search }) => {
         if (Array.isArray(data.products)) {
           setProducts(data.products);
         } else {
-          throw new Error("Invalid API response format");
+          throw new Error("Invalid API response");
         }
       } catch (err) {
-        setError((err as Error).message);
+        setError("Something went wrong");
       } finally {
         setLoading(false);
       }
     };
 
     fetchProducts();
-  }, [search]);
+  }, [search, category]);
 
   if (loading) return <p>Loading products...</p>;
-  if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
+  if (error) return <p style={{ color: "red" }}>{error}</p>;
   if (products.length === 0) return <p>No products found.</p>;
 
   return (

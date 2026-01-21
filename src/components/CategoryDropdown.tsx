@@ -1,10 +1,18 @@
+
 import React, { useEffect, useState } from "react";
 
-const CategoryDropdown: React.FC = () => {
+interface CategoryDropdownProps {
+  category: string;
+  onCategoryChange: (value: string) => void;
+}
+
+const CategoryDropdown: React.FC<CategoryDropdownProps> = ({
+  category,
+  onCategoryChange
+}) => {
   const [categories, setCategories] = useState<string[]>([]);
-  const [selected, setSelected] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -12,20 +20,17 @@ const CategoryDropdown: React.FC = () => {
       setError("");
 
       try {
-        const response = await fetch("https://dummyjson.com/products/category-list");
+        const response = await fetch(
+          "https://dummyjson.com/products/category-list"
+        );
         if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
+          throw new Error("Failed to fetch categories");
         }
 
         const data: string[] = await response.json();
-
-        if (!Array.isArray(data)) {
-          throw new Error("Invalid API response format");
-        }
-
         setCategories(data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Unknown error");
+        setError("Could not load categories");
       } finally {
         setLoading(false);
       }
@@ -36,20 +41,15 @@ const CategoryDropdown: React.FC = () => {
 
   return (
     <div>
-      <label htmlFor="category">Select a category:</label>
-      {loading && <p>Loading...</p>}
-      {error && <p style={{ color: "red" }}>Error: {error}</p>}
-
       <select
-        id="category"
-        value={selected}
-        onChange={(e) => setSelected(e.target.value)}
+        value={category}
+        onChange={(e) => onCategoryChange(e.target.value)}
         disabled={loading || !!error}
       >
-        <option value="">All</option>
-        {categories.map((category) => (
-          <option key={category} value={category}>
-            {category}
+        <option value="All">All</option>
+        {categories.map((cat) => (
+          <option key={cat} value={cat}>
+            {cat}
           </option>
         ))}
       </select>

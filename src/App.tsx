@@ -10,7 +10,8 @@ const App = () => {
     (localStorage.getItem("theme") as Theme) || "light"
   );
 
-  const [search, setSearch] = useState(""); 
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("All"); 
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
@@ -26,12 +27,14 @@ const App = () => {
       <Navbar
         theme={theme}
         toggleTheme={toggleTheme}
-        onSearch={setSearch}   
+        onSearch={setSearch}
+        category={category}
+        onCategoryChange={setCategory}
       />
 
       <main className="p-4 sm:p-6">
         <div className="grid gap-6">
-          <ProductList search={search} />
+          <ProductList search={search} category={category} />
         </div>
       </main>
     </>
