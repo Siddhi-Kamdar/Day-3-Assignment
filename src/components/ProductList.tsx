@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useCart } from "./CartContext";
 
 interface Product {
   id: number;
@@ -16,6 +17,7 @@ const ProductList: React.FC<ProductListProps> = ({ search, category }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const { addToCart } = useCart();
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -68,7 +70,16 @@ const ProductList: React.FC<ProductListProps> = ({ search, category }) => {
           <p>Category: {product.category}</p>
           <p>Price: ${product.price}</p>
 
-          <button className="mt-auto bg-blue-500 text-black py-1 rounded text-sm">
+          <button
+            onClick={() =>
+              addToCart({
+                id: product.id,
+                title: product.title,
+                price: product.price
+              })
+            }
+            className="mt-auto bg-blue-500 text-black py-1 rounded text-sm"
+          >
             Add to Cart
           </button>
         </div>

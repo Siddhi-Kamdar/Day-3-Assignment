@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import Navbar from "./components/Navbar";
 import "./styles.css";
 import ProductList from "./components/ProductList";
+import { CartProvider } from "./components/CartContext";
 
 type Theme = "light" | "dark";
 
@@ -23,7 +24,7 @@ const App = () => {
   };
 
   return (
-    <>
+    <CartProvider>
       <Navbar
         theme={theme}
         toggleTheme={toggleTheme}
@@ -37,7 +38,7 @@ const App = () => {
           <ProductList search={search} category={category} />
         </div>
       </main>
-    </>
+    </CartProvider>
   );
 };
 

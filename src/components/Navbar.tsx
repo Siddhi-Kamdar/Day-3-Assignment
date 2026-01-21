@@ -1,5 +1,7 @@
 import CategoryDropdown from "./CategoryDropdown";
 import React, { useState } from "react";
+import CartPopup from "./CartPopup";
+import { useCart } from "./CartContext";
 
 interface ThemeProps {
   theme: "light" | "dark";
@@ -20,10 +22,12 @@ const Navbar: React.FC<NavbarProps> = ({
   onCategoryChange
 }) => {
   const [input, setInput] = useState("");
+  const [open, setOpen] = useState(false);
 
   const handleSearch = () => {
     onSearch(input.trim());
   };
+  const { totalItems } = useCart();
 
   return (
     <nav
@@ -35,7 +39,6 @@ const Navbar: React.FC<NavbarProps> = ({
     >
       <h2 className="text-xl font-bold">E-Com</h2>
 
-      {/* Search */}
       <div className="flex gap-2">
         <input
           type="text"
@@ -61,7 +64,15 @@ const Navbar: React.FC<NavbarProps> = ({
         {theme === "light" ? "🌙" : "☀️"}
       </button>
 
-      <button> 🛒 </button>
+      <button onClick={() => setOpen(true)} className="relative">
+        🛒
+        {totalItems > 0 && (
+          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 rounded-full">
+            {totalItems}
+          </span>
+        )}
+      </button>
+      {open && <CartPopup onClose={() => setOpen(false)} />}
     </nav>
   );
 };
