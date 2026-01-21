@@ -25,7 +25,7 @@ const App = () => {
       <Navbar theme={theme} toggleTheme={toggleTheme} />
 
       <main className="p-4 sm:p-6 ">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <div className="grid gap-6">
           <ProductList />
         </div>
       </main>
@@ -33,11 +33,5 @@ const App = () => {
   );
 };
 
-const Stat = ({ label, value }: { label: string; value: any }) => (
-  <div className="bg-white p-4 rounded-xl shadow text-center">
-    <p className="text-sm text-gray-500">{label}</p>
-    <p className="text-xl font-bold">{value}</p>
-  </div>
-);
 
 export default App;
