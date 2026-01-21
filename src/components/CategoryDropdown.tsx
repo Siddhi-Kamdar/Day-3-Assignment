@@ -46,7 +46,7 @@ const CategoryDropdown: React.FC = () => {
         onChange={(e) => setSelected(e.target.value)}
         disabled={loading || !!error}
       >
-        <option value="">-- Select --</option>
+        <option value="">All</option>
         {categories.map((category) => (
           <option key={category} value={category}>
             {category}

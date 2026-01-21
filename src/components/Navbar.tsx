@@ -38,11 +38,11 @@ const Navbar: React.FC<NavbarProps> = ({
       <CategoryDropdown/>
       <button
         onClick={toggleTheme}
-        className="ml-4 px-3 py-2 rounded border"
+        className="ml-4  rounded border"
       >
-        {theme === "light" ? "🌙 Dark" : "☀️ Light"}
+        {theme === "light" ? "🌙" : "☀️"}
       </button>
-
+      <button> 🛒 </button>
       
     </nav>
   );

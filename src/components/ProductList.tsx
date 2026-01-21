@@ -41,18 +41,23 @@ const ProductList: React.FC = () => {
 
   return (
     <div>
-      <h2>Product List</h2>
-      <ul>
-        {products.map((product) => (
-          <li key={product.id}>
-            <strong>{product.title}</strong> <br />
-            Category: {product.category} <br />
-            Price: ${product.price}
-          </li>
-        ))}
-      </ul>
+      {products.map((product) => (
+        <div className="border rounded-xl p-4 shadow-sm flex flex-col gap-2">
+          <div className="flex justify-between items-center"></div>
+          <div key={product.id} style={{ marginBottom: "10px" }}>
+            <h2 className="font-bold">{product.title}</h2>
+            <p>Category: {product.category}</p>
+            <p>Price: ${product.price}</p>
+          </div>
+          <button
+            className="flex-1 bg-blue-500 text-black py-1 rounded text-sm"
+          >
+            Add to Cart
+          </button>
+        </div>
+      ))}
     </div>
   );
-};
+}
 
 export default ProductList;
