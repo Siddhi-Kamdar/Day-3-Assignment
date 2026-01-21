@@ -11,11 +11,9 @@ interface ThemeProps {
   toggleTheme: () => void;
 }
 
-type NavbarProps = SearchProps & ThemeProps;
+type NavbarProps =  ThemeProps;
 
 const Navbar: React.FC<NavbarProps> = ({
-  search,
-  onSearchChange,
   theme,
   toggleTheme
 }) => {
@@ -31,8 +29,8 @@ const Navbar: React.FC<NavbarProps> = ({
 
       <input
         type="text"
-        value={search}
-        onChange={(e) => onSearchChange(e.target.value)}
+        // value={search}
+        // onChange={(e) => onSearchChange(e.target.value)}
         placeholder="Search..."
         className="w-full sm:w-72 px-3 py-2 rounded bg-white text-black outline-none"
       />
