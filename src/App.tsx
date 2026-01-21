@@ -4,6 +4,7 @@ import ProductDisplayCard from "./components/ProductDisplayCard";
 import "./styles.css";
 import ProductList from "./components/ProductList";
 
+
 type Theme = "light" | "dark";
 
 const App = () => {
@@ -20,6 +21,8 @@ const App = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
+
+
   return (
     <>
       <Navbar theme={theme} toggleTheme={toggleTheme} />
@@ -27,6 +30,12 @@ const App = () => {
       <main className="p-4 sm:p-6 ">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
           <ProductList />
+          <section className="lg:col-span-3 flex flex-col gap-6">
+          
+
+
+
+          </section>
         </div>
       </main>
     </>

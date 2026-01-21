@@ -1,4 +1,4 @@
-
+import CategoryDropdown from "./CategoryDropdown";
 import React from "react";
 
 interface SearchProps {
@@ -35,12 +35,15 @@ const Navbar: React.FC<NavbarProps> = ({
         className="w-full sm:w-72 px-3 py-2 rounded bg-white text-black outline-none"
       />
 
+      <CategoryDropdown/>
       <button
         onClick={toggleTheme}
         className="ml-4 px-3 py-2 rounded border"
       >
         {theme === "light" ? "🌙 Dark" : "☀️ Light"}
       </button>
+
+      
     </nav>
   );
 };
